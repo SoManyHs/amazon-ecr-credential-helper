@@ -66,6 +66,14 @@ func TestExtractRegistry(t *testing.T) {
 			hasError: false,
 		},
 		{
+			serverURL: "123456789012.dkr.ecr-fips.us-gov-west-1.amazonaws.com",
+			registry: &Registry{
+				ID:     "123456789012",
+				Region: "us-gov-west-1",
+			},
+			hasError: false,
+		},
+		{
 			serverURL: ".dkr.ecr.not-real.amazonaws.com",
 			hasError:  true,
 		},
