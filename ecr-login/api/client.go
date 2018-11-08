@@ -36,6 +36,7 @@ var ecrPattern = regexp.MustCompile(`(^[a-zA-Z0-9][a-zA-Z0-9-_]*)\.dkr\.ecr(\-fi
 
 type Registry struct {
 	ID     string
+	Fips   bool
 	Region string
 }
 
@@ -51,6 +52,7 @@ func ExtractRegistry(serverURL string) (*Registry, error) {
 	}
 	registry := &Registry{
 		ID:     matches[1],
+		Fips:   matches[2] == "-fips",
 		Region: matches[3],
 	}
 	return registry, nil
