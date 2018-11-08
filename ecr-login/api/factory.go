@@ -34,6 +34,7 @@ type ClientFactory interface {
 	NewClient(awsSession *session.Session, awsConfig *aws.Config) Client
 	NewClientWithOptions(opts Options) Client
 	NewClientFromRegion(region string) Client
+	NewClientWithFipsEndpoint(endpoint string) Client
 	NewClientWithDefaults() Client
 }
 
@@ -50,6 +51,16 @@ func (defaultClientFactory DefaultClientFactory) NewClientWithDefaults() Client 
 	awsSession := session.New()
 	awsSession.Handlers.Build.PushBackNamed(userAgentHandler)
 	awsConfig := awsSession.Config
+	return defaultClientFactory.NewClientWithOptions(Options{
+		Session: awsSession,
+		Config:  awsConfig,
+	})
+}
+
+func (defaultClientFactory DefaultClientFactory) NewClientWithFipsEndpoint(endpoint string) Client {
+	awsSession := session.New()
+	awsSession.Handlers.Build.PushBackNamed(userAgentHandler)
+	awsConfig := awsSession.Config.WithEndpoint(endpoint)
 	return defaultClientFactory.NewClientWithOptions(Options{
 		Session: awsSession,
 		Config:  awsConfig,

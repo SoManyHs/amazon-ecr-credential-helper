@@ -51,7 +51,13 @@ func (self ECRHelper) Get(serverURL string) (string, string, error) {
 		return "", "", credentials.NewErrCredentialsNotFound()
 	}
 
-	client := self.ClientFactory.NewClientFromRegion(registry.Region)
+	var client api.Client
+	if registry.Fips {
+		client = self.ClientFactory.NewClientWithFipsEndpoint(serverURL)
+	} else {
+		client := self.ClientFactory.NewClientFromRegion(registry.Region)
+	}
+
 	auth, err := client.GetCredentials(serverURL)
 	if err != nil {
 		logrus.WithError(err).Error("Error retrieving credentials")
